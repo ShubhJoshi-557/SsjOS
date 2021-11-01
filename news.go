@@ -17,7 +17,7 @@ func showNews() {
     // a := app.NewWithID("")
     w := myapp.NewWindow("SSJ News App")
     w.Resize(fyne.NewSize(300, 400))
-    URL := fmt.Sprintf("https://gnews.io/api/v4/top-headlines?token=f4242aaddbb109f07654431e207e2412&lang=en&max=100")
+    URL := fmt.Sprintf("https://gnews.io/api/v4/top-headlines?token="+API_KEY)
     //API
     res, _ := http.Get(URL)
     defer res.Body.Close()
