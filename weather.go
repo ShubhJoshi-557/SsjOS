@@ -43,7 +43,7 @@ func showWeatherApp() {
 		"Gurgaon",
 		"Noida",}, func(value string) {
 		log.Println("Select set to", value)
-		res, err:=http.Get("http://api.openweathermap.org/data/2.5/weather?q="+value+"&APPID=b2d327a4ff36fdcee7cd18945283e86f")
+		res, err:=http.Get("http://api.openweathermap.org/data/2.5/weather?q="+value+API_KEY)
 		if err!=nil{
 			fmt.Println(err)
 		}
