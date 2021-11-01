@@ -16,14 +16,16 @@ import (
 	"net/http"
 )
 
-func showWeatherApp(w fyne.Window) {
+func showWeatherApp() {
 	// a := app.New()
-	// w := myapp.NewWindow("Weather App")
-	// w.Resize(fyne.NewSize(400,500))
+	w := myapp.NewWindow("Weather App")
+	w.Resize(fyne.NewSize(400,500))
+	r, _ := fyne.LoadResourceFromPath("static\\weather3.png")
+	w.SetIcon(r)
 	
 	
 	
-	image:= canvas.NewImageFromFile("weather3.png")
+	image:= canvas.NewImageFromFile("static\\weather3.png")
 	image.FillMode = canvas.ImageFillOriginal
 	combo := widget.NewSelect([]string{"Mumbai", "Delhi", "Ahmedabad", "Chennai", "Bangalore", "Kolkata",
 		"Surat",
@@ -76,13 +78,13 @@ func showWeatherApp(w fyne.Window) {
 				label5,
 				label6,
 		)
-		w.SetContent(container.NewBorder(panelContent,nil,nil,nil,weatherContainer),)
+		w.SetContent(container.NewBorder(nil,nil,nil,nil,weatherContainer),)
 	})
 	weatherContainer:=container.NewVBox(
 			image,
 			combo,
 	)
-	w.SetContent(container.NewBorder(panelContent,nil,nil,nil,weatherContainer),)
+	w.SetContent(container.NewBorder(nil,nil,nil,nil,weatherContainer),)
 	
 	w.Show()
 }
