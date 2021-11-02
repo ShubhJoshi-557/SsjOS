@@ -20,7 +20,7 @@ func showWeatherApp() {
 	// a := app.New()
 	w := myapp.NewWindow("Weather App")
 	w.Resize(fyne.NewSize(400,500))
-	r, _ := fyne.LoadResourceFromPath("static\\weather3.png")
+	r, _ := fyne.LoadResourceFromPath("static\\weathericon.png")
 	w.SetIcon(r)
 	
 	
@@ -85,7 +85,7 @@ func showWeatherApp() {
 			combo,
 	)
 	w.SetContent(container.NewBorder(nil,nil,nil,nil,weatherContainer),)
-	
+	w.CenterOnScreen()	
 	w.Show()
 }
 

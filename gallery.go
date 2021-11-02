@@ -3,7 +3,6 @@ package main
 import (
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2"
-	// "fyne.io/fyne/v2/app"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -12,7 +11,6 @@ import (
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
-	// "fyne.io/fyne/v2/dialog"
 )
 
 func showGalleryApp() {
@@ -53,9 +51,10 @@ func showGalleryApp() {
 
 	
 	
-	r, _ := fyne.LoadResourceFromPath("static\\gallery.png")
+	r, _ := fyne.LoadResourceFromPath("static\\gallery1.png")
 	w.SetIcon(r)
 	w.SetContent(container.NewBorder(selectFolderButton,nil,nil,nil))
+	w.CenterOnScreen()
 	w.Show();
 }
 

@@ -1,24 +1,45 @@
 package main
 
 import (
+	// "fmt"
 	"image/color"
+	"time"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 )
 
 var myapp fyne.App = app.New()
-var mywindow fyne.Window = myapp.NewWindow("SsjOS")
+var mywindow fyne.Window = myapp.NewWindow("SsjOS");
+var drawer_toggle bool = false; 
+var theme_toggle bool = false;
+var theme_color int = 0;
+
+func updateTime(datetime *canvas.Text){
+	datetime.Text = time.Now().Format("Jan 02  15:04:05")
+	datetime.Refresh()
+}
 
 func main() {
 	// app := app.New()
 
 	// w := app.NewWindow("Hello")
+	myapp.Settings().SetTheme(theme.DarkTheme())
 
+	dt := time.Now()
+	// hello := widget.NewLabel(dt.Format("2006-01-02  15:04 Monday"))
+	datetime := canvas.NewText(dt.Format("Jan 02  15:04:05"),color.White)
+	datetime.TextSize = 12
+	datetime.Alignment = fyne.TextAlignCenter
+	datetime.TextStyle = fyne.TextStyle{Bold: true}
+	// updateTime(datetime)
+
+	
 	img := canvas.NewImageFromFile("static\\wallpaper5.jpg")
 	img.FillMode = canvas.ImageFillStretch
 
@@ -60,15 +81,98 @@ func main() {
 		mywindow.Close()
 	})
 
-	bg_color := canvas.NewRectangle(color.RGBA{R:0,G:0,B:0,A:100})
+	rect:= canvas.NewRectangle(color.NRGBA{R:uint8(theme_color),G:uint8(theme_color),B:uint8(theme_color),A:180})
+	rect.Hide()
+	apps1 := container.New(layout.NewGridLayoutWithRows(5),
+	layout.NewSpacer(),
+	container.New(layout.NewHBoxLayout(),
+		layout.NewSpacer(),
+		container.NewGridWrap(fyne.NewSize(60,60), container.NewPadded(calc, icon1)),
+		layout.NewSpacer(),
+		container.NewGridWrap(fyne.NewSize(60,60), container.NewPadded(weather, icon2)),
+		layout.NewSpacer(),
+		container.NewGridWrap(fyne.NewSize(60,60), container.NewPadded(gallery, icon3)),
+		layout.NewSpacer(),
+	),
+	layout.NewSpacer(),
+	container.New(layout.NewHBoxLayout(),
+		layout.NewSpacer(),
+		container.NewGridWrap(fyne.NewSize(60,60), container.NewPadded(notepad, icon4)),
+		layout.NewSpacer(),
+		container.NewGridWrap(fyne.NewSize(60,60), container.NewPadded(music, icon5)),
+		layout.NewSpacer(),
+		container.NewGridWrap(fyne.NewSize(60,60), container.NewPadded(news, icon6)),
+		layout.NewSpacer(),
+	),	
+	layout.NewSpacer(),
+	)
+	apps1.Hide()
+	rect_container :=container.NewGridWrap(fyne.NewSize(500,400), container.NewPadded(rect,apps1))
 
+	icon0 :=canvas.NewImageFromFile("static\\drawer.png")
+	icon0.FillMode = canvas.ImageFillContain
+	app_drawer := widget.NewButton("",func ()  {
+		// fmt.Println(toggle)
+		drawer_toggle = !drawer_toggle
+		if drawer_toggle != true{
+			rect.Hide()
+			apps1.Hide()
+		}else{
+			rect.Show()
+			apps1.Show()
+		}
+	})
+	
+	bg_color := canvas.NewRectangle(color.NRGBA{R:uint8(theme_color),G:uint8(theme_color),B:uint8(theme_color),A:150})
+
+	
+	icon8 :=canvas.NewImageFromFile("static\\lighttheme.png")
+	icon8.FillMode = canvas.ImageFillContain
+	lt_theme := widget.NewButton("", func() {
+		myapp.Settings().SetTheme(theme.LightTheme())
+	})
+	icon9 :=canvas.NewImageFromFile("static\\darktheme.png")
+	icon9.FillMode = canvas.ImageFillContain
+	drk_theme := widget.NewButton("", func() {
+		myapp.Settings().SetTheme(theme.DarkTheme())
+	})
+
+	rect2:= canvas.NewRectangle(color.NRGBA{R:uint8(theme_color),G:uint8(theme_color),B:uint8(theme_color),A:180})
+	rect2.Hide()
+
+	themes := container.New(layout.NewVBoxLayout(),
+		container.NewGridWrap(fyne.NewSize(160,90), container.NewPadded(lt_theme, icon8)),
+		layout.NewSpacer(),
+		container.NewGridWrap(fyne.NewSize(160,90), container.NewPadded(drk_theme, icon9)),
+	)
+	themes.Hide()
+	theme_container :=container.NewGridWrap(fyne.NewSize(170,200), container.NewPadded(rect2,themes))
+	settings_icon :=canvas.NewImageFromFile("static\\setting.png")
+	settings_icon.FillMode = canvas.ImageFillContain
+	setting := widget.NewButton("",func ()  {
+		theme_toggle = !theme_toggle
+		if theme_toggle != true{
+			rect2.Hide()
+			themes.Hide()
+			rect.Hide()
+			apps1.Hide()
+		}else{
+			rect2.Show()
+			themes.Show()
+			rect.Hide()
+			apps1.Hide()
+		}
+	})
+	rect3:= canvas.NewRectangle(color.RGBA{R:48,G:48,B:48,A:255})
+	// datetime_bar:= container.NewGridWrap(fyne.NewSize(1920,20), container.NewWithoutLayout(datetime, rect3))
+	datetime_bar:= container.New(
+		layout.NewMaxLayout(),
+		rect3,
+		datetime,
+	)
 	apps := container.New(layout.NewVBoxLayout(),
-	container.NewGridWrap(fyne.NewSize(45,45), container.NewPadded(calc, icon1)),
-	container.NewGridWrap(fyne.NewSize(45,45), container.NewPadded(weather, icon2)),
-	container.NewGridWrap(fyne.NewSize(45,45), container.NewPadded(gallery, icon3)),
-	container.NewGridWrap(fyne.NewSize(45,45), container.NewPadded(notepad, icon4)),
-	container.NewGridWrap(fyne.NewSize(45,45), container.NewPadded(music, icon5)),
-	container.NewGridWrap(fyne.NewSize(45,45), container.NewPadded(news, icon6)),
+	container.NewGridWrap(fyne.NewSize(45,45), container.NewPadded(app_drawer, icon0)),
+	container.NewGridWrap(fyne.NewSize(45,45), container.NewPadded(setting, settings_icon)),
 	layout.NewSpacer(),
 	container.NewGridWrap(fyne.NewSize(45,45), container.NewPadded(Shutdown, icon7)),
 	)
@@ -83,7 +187,34 @@ func main() {
 	r, _ := fyne.LoadResourceFromPath("static\\oslogo.png")
 	mywindow.SetIcon(r)
 	mywindow.SetContent(
-		container.New(layout.NewMaxLayout(),img,
-		container.New(layout.NewBorderLayout(nil, nil,pane, nil),pane)))
+		container.New(layout.NewMaxLayout(), img,
+		container.New(layout.NewBorderLayout(datetime_bar,nil,pane, nil), datetime_bar, pane, rect_container, theme_container)))
+	go func(){
+		t := time.NewTicker(time.Second)
+
+		for range t.C{
+			updateTime(datetime)
+		}
+	}()
 	mywindow.ShowAndRun()
 }
+
+
+
+
+
+
+
+
+
+// apps := container.New(layout.NewVBoxLayout(),
+// 	container.NewGridWrap(fyne.NewSize(45,45), container.NewPadded(app_drawer, icon0)),
+// 	container.NewGridWrap(fyne.NewSize(45,45), container.NewPadded(calc, icon1)),
+// 	container.NewGridWrap(fyne.NewSize(45,45), container.NewPadded(weather, icon2)),
+// 	container.NewGridWrap(fyne.NewSize(45,45), container.NewPadded(gallery, icon3)),
+// 	container.NewGridWrap(fyne.NewSize(45,45), container.NewPadded(notepad, icon4)),
+// 	container.NewGridWrap(fyne.NewSize(45,45), container.NewPadded(music, icon5)),
+// 	container.NewGridWrap(fyne.NewSize(45,45), container.NewPadded(news, icon6)),
+// 	layout.NewSpacer(),
+// 	container.NewGridWrap(fyne.NewSize(45,45), container.NewPadded(Shutdown, icon7)),
+// 	)

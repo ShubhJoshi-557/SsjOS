@@ -154,8 +154,9 @@ func showTextEditor() {
     menux1 := fyne.NewMainMenu(menuItem)
     w.SetMainMenu(menux1)
     textContainer:=container.NewWithoutLayout(input,)
-    r, _ := fyne.LoadResourceFromPath("static\\notepadlogo.png")
+    r, _ := fyne.LoadResourceFromPath("static\\notepad.png")
 	w.SetIcon(r)
     w.SetContent(container.NewBorder(nil,nil,nil,nil,textContainer))
+    w.CenterOnScreen()
     w.Show()
 }

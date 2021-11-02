@@ -56,6 +56,7 @@ func showNews() {
 	w.SetIcon(r)
     // e.Resize(fyne.NewSize(300, 300))
     w.SetContent(container.NewBorder(img, label2, nil, nil, e))
+    w.CenterOnScreen()
     w.Show()
 }
 // This file was generated from JSON Schema using quicktype, do not modify it directly.

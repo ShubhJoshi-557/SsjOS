@@ -76,5 +76,6 @@ func showAudioPlayer() {
     w.SetContent(
         container.NewBorder(logo, nil, nil, nil, c),
     )
+    w.CenterOnScreen()
     w.Show()
 }

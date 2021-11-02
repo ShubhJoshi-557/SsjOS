@@ -170,6 +170,7 @@ func showCalc() {
 	w := myapp.NewWindow("Calculator");
 	w.Resize(fyne.NewSize(450,280));
 	r, _ := fyne.LoadResourceFromPath("static\\calclogo.png")
+	w.CenterOnScreen()
 	w.SetIcon(r)
 	w.SetContent(container.NewBorder(nil,nil,nil,nil,calcContainer))
 	w.Show()
