@@ -32,7 +32,7 @@ func showAudioPlayer() {
     // a := app.New()
     w := myapp.NewWindow("Audio Player")
     w.Resize(fyne.NewSize(400, 400))
-	r, _ := fyne.LoadResourceFromPath("static\\music1.png")
+	r, _ := fyne.LoadResourceFromPath("static\\music2.png")
 	w.SetIcon(r)
     logo := canvas.NewImageFromFile("static\\music1.png")
     logo.FillMode = canvas.ImageFillOriginal
