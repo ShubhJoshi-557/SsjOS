@@ -4,6 +4,7 @@ import (
 	// "fmt"
 	"image/color"
 	"time"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
@@ -18,6 +19,10 @@ var mywindow fyne.Window = myapp.NewWindow("SsjOS");
 var drawer_toggle bool = false; 
 var theme_toggle bool = false;
 var theme_color int = 0;
+var rect *canvas.Rectangle;
+var rect2 *canvas.Rectangle;
+var bg_color *canvas.Rectangle;
+
 
 func updateTime(datetime *canvas.Text){
 	datetime.Text = time.Now().Format("Jan 02  15:04:05")
@@ -75,7 +80,7 @@ func main() {
 		mywindow.Close()
 	})
 
-	rect:= canvas.NewRectangle(color.NRGBA{R:uint8(theme_color),G:uint8(theme_color),B:uint8(theme_color),A:180})
+	rect= canvas.NewRectangle(color.NRGBA{R:uint8(theme_color),G:uint8(theme_color),B:uint8(theme_color),A:180})
 	rect.Hide()
 	apps1 := container.New(layout.NewGridLayoutWithRows(5),
 	layout.NewSpacer(),
@@ -116,21 +121,35 @@ func main() {
 		}
 	})
 	
-	bg_color := canvas.NewRectangle(color.NRGBA{R:uint8(theme_color),G:uint8(theme_color),B:uint8(theme_color),A:150})
+	bg_color = canvas.NewRectangle(color.NRGBA{R:uint8(theme_color),G:uint8(theme_color),B:uint8(theme_color),A:150})
 
 	
 	icon8 :=canvas.NewImageFromFile("static\\lighttheme.png")
 	icon8.FillMode = canvas.ImageFillContain
 	lt_theme := widget.NewButton("", func() {
 		myapp.Settings().SetTheme(theme.LightTheme())
+		theme_color = 255
+		rect.FillColor= color.NRGBA{R:uint8(theme_color),G:uint8(theme_color),B:uint8(theme_color),A:180}
+		rect2.FillColor= color.NRGBA{R:uint8(theme_color),G:uint8(theme_color),B:uint8(theme_color),A:180}
+		bg_color.FillColor= color.NRGBA{R:uint8(theme_color),G:uint8(theme_color),B:uint8(theme_color),A:180}
+		rect.Refresh()
+		rect2.Refresh()
+		bg_color.Refresh()
 	})
 	icon9 :=canvas.NewImageFromFile("static\\darktheme.png")
 	icon9.FillMode = canvas.ImageFillContain
 	drk_theme := widget.NewButton("", func() {
 		myapp.Settings().SetTheme(theme.DarkTheme())
+		theme_color = 0
+		rect.FillColor= color.NRGBA{R:uint8(theme_color),G:uint8(theme_color),B:uint8(theme_color),A:180}
+		rect2.FillColor= color.NRGBA{R:uint8(theme_color),G:uint8(theme_color),B:uint8(theme_color),A:180}
+		bg_color.FillColor= color.NRGBA{R:uint8(theme_color),G:uint8(theme_color),B:uint8(theme_color),A:180}
+		rect.Refresh()
+		rect2.Refresh()
+		bg_color.Refresh()
 	})
 
-	rect2:= canvas.NewRectangle(color.NRGBA{R:uint8(theme_color),G:uint8(theme_color),B:uint8(theme_color),A:180})
+	rect2= canvas.NewRectangle(color.NRGBA{R:uint8(theme_color),G:uint8(theme_color),B:uint8(theme_color),A:180})
 	rect2.Hide()
 
 	themes := container.New(layout.NewVBoxLayout(),
@@ -156,8 +175,7 @@ func main() {
 			apps1.Hide()
 		}
 	})
-	
-	rect3:= canvas.NewRectangle(color.RGBA{R:48,G:48,B:48,A:255})
+	rect3:= canvas.NewRectangle(color.RGBA{R:29,G:29,B:29,A:255})
 	datetime_bar:= container.New(
 		layout.NewMaxLayout(),
 		rect3,

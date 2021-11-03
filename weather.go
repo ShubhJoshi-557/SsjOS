@@ -5,28 +5,63 @@ import (
 	"fmt"
 	"image/color"
 	"io/ioutil"
-	"log"
-
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2"
 	// "fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 
-	"fyne.io/fyne/v2/widget"
 	"net/http"
+
+	"fyne.io/fyne/v2/widget"
 )
 
+var city string = "mumbai";
 func showWeatherApp() {
 	// a := app.New()
 	w := myapp.NewWindow("Weather App")
-	w.Resize(fyne.NewSize(400,500))
+	w.Resize(fyne.NewSize(600,500))
 	r, _ := fyne.LoadResourceFromPath("static\\weathericon.png")
 	w.SetIcon(r)
+
+	res, err:=http.Get("http://api.openweathermap.org/data/2.5/weather?q="+city+"&APPID=b2d327a4ff36fdcee7cd18945283e86f")
+	if err!=nil{
+		fmt.Println(err)
+	}
+
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err!=nil{
+		fmt.Println(err)
+	}
+
+	weather, err := UnmarshalWeather(body)
+	if err!=nil{
+		fmt.Println(err)
+	}
+	label1:= canvas.NewText("Weather Details:", color.White) 
+	label1.Alignment = fyne.TextAlignCenter
+	label1.TextSize = 15
+	label2:= canvas.NewText(fmt.Sprintf("%s %s" , weather.Name, weather.Sys.Country), color.White)
+	label2.Alignment = fyne.TextAlignCenter
+	label2.TextSize = 30
+	label3:= canvas.NewText(fmt.Sprintf("%s" , weather.Weather[0].Description), color.White)
+	label3.Alignment = fyne.TextAlignCenter
+	weather_icon:=canvas.NewImageFromFile("static\\w_ico.png")
+	weather_icon.FillMode = canvas.ImageFillOriginal
+	label4:= canvas.NewText(fmt.Sprintf("\t%.2f  °C" , weather.Main.Temp/10), color.White) 
+	label4.Alignment = fyne.TextAlignCenter
+	label4.TextSize = 25
+	label5:= canvas.NewText(fmt.Sprintf("Wind Speed: \t%.2f mph" , weather.Wind.Speed), color.White) 
+	label5.Alignment = fyne.TextAlignCenter
+	label6:= canvas.NewText(fmt.Sprintf("Humidity: \t%.2d" , weather.Main.Humidity), color.White)
+	label6.Alignment = fyne.TextAlignCenter
+	label7:= canvas.NewText(fmt.Sprintf("Longitude: \t%f" , weather.Coord.Lat), color.White)
+	label7.Alignment = fyne.TextAlignCenter
+	label8:= canvas.NewText(fmt.Sprintf("Latitude: \t%f" , weather.Coord.Lon), color.White)
+	label8.Alignment = fyne.TextAlignCenter
 	
-	
-	
-	image:= canvas.NewImageFromFile("static\\weather3.png")
-	image.FillMode = canvas.ImageFillOriginal
 	combo := widget.NewSelect([]string{"Mumbai", "Delhi", "Ahmedabad", "Chennai", "Bangalore", "Kolkata",
 		"Surat",
 		"Pune",
@@ -42,48 +77,64 @@ func showWeatherApp() {
 		"Ranchi",
 		"Gurgaon",
 		"Noida",}, func(value string) {
-		log.Println("Select set to", value)
-		res, err:=http.Get("http://api.openweathermap.org/data/2.5/weather?q="+value+"&APPID=b2d327a4ff36fdcee7cd18945283e86f")
+	
+		res, err=http.Get("http://api.openweathermap.org/data/2.5/weather?q="+value+"&APPID=b2d327a4ff36fdcee7cd18945283e86f")
 		if err!=nil{
 			fmt.Println(err)
 		}
 
 		defer res.Body.Close()
 
-		body, err := ioutil.ReadAll(res.Body)
+		body, err = ioutil.ReadAll(res.Body)
 		if err!=nil{
 			fmt.Println(err)
 		}
 
-		weather, err := UnmarshalWeather(body)
+		weather, err = UnmarshalWeather(body)
 		if err!=nil{
 			fmt.Println(err)
 		}
+		label2.Text = weather.Name+" "+weather.Sys.Country
+		label3.Text = weather.Weather[0].Description
+		label4.Text = fmt.Sprintf("%.2f" , weather.Main.Temp/10) + " °C"
+		label5.Text = fmt.Sprintf("Wind Speed: \t%.2f" , weather.Wind.Speed) + " mph"
+		label6.Text = fmt.Sprintf("Humidity: \t%.2d" , weather.Main.Humidity) + " %"
+		label7.Text = fmt.Sprintf("Longitude: \t%f" , weather.Coord.Lat) 
+		label8.Text = fmt.Sprintf("Latitude: \t%f" , weather.Coord.Lon) 
 
-		label1:= canvas.NewText("Weather Details:", color.White) 
-		label1.TextStyle = fyne.TextStyle{Bold: true}
-		label2:= canvas.NewText(fmt.Sprintf("Country: \t%s" , weather.Sys.Country), color.White)
-		label3:= canvas.NewText(fmt.Sprintf("City: \t%s" , weather.Name), color.White) 
-		label4:= canvas.NewText(fmt.Sprintf("Wind Speed: \t%.2f" , weather.Wind.Speed), color.White) 
-		label5:= canvas.NewText(fmt.Sprintf("Temperature: \t%.2f" , weather.Main.Temp), color.White) 
-		label6:= canvas.NewText(fmt.Sprintf("Humidity: \t%.2d" , weather.Main.Humidity), color.White) 
-
-		weatherContainer:=container.NewVBox(
-				image,
-				label1,
-				// combo,
-				label2,
-				label3,
-				label4,
-				label5,
-				label6,
-		)
-		w.SetContent(container.NewBorder(nil,nil,nil,nil,weatherContainer),)
+		label2.Refresh()
+		label3.Refresh()
+		label4.Refresh()
+		label5.Refresh()
+		label6.Refresh()
+		label7.Refresh()
+		label8.Refresh()
+		
 	})
-	weatherContainer:=container.NewVBox(
-			image,
-			combo,
+	img := canvas.NewImageFromFile("static\\weather1.jpg")
+	img.FillMode = canvas.ImageFillStretch
+
+	rect1:=canvas.NewRectangle(color.NRGBA{R:0,G:0,B:0,A:150})
+	c1 := container.New(layout.NewHBoxLayout(),
+		container.NewGridWrap(fyne.NewSize(200,35), combo),
+		layout.NewSpacer(),
+		
+		container.NewGridWrap(fyne.NewSize(400,500), container.NewPadded(rect1,
+			container.New(layout.NewVBoxLayout(),
+				container.NewPadded(label1),
+				container.NewPadded(label2),
+				container.NewPadded(label3),
+				container.New(layout.NewCenterLayout(),container.NewGridWrap(fyne.NewSize(100,100),container.NewPadded(weather_icon)),),
+				container.NewPadded(label4),
+				layout.NewSpacer(),
+				container.NewPadded(label5),
+				container.NewPadded(label6),
+				container.NewPadded(label7),
+				container.NewPadded(label8),
+				))),
 	)
+	weatherContainer:=container.New(layout.NewMaxLayout(), img,
+		container.New(layout.NewBorderLayout(nil,nil,nil, nil),c1))
 	w.SetContent(container.NewBorder(nil,nil,nil,nil,weatherContainer),)
 	w.CenterOnScreen()	
 	w.Show()

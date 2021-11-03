@@ -1,24 +1,29 @@
 package main
+
 import (
-    "fmt"
-    // "os"
-    "time"
-    "fyne.io/fyne/v2"
-    // "fyne.io/fyne/v2/app"
-    "fyne.io/fyne/v2/canvas"
-    "fyne.io/fyne/v2/container"
-    "fyne.io/fyne/v2/dialog"
-    "fyne.io/fyne/v2/storage"
-    "fyne.io/fyne/v2/theme"
-    "fyne.io/fyne/v2/widget"
-    "github.com/faiface/beep"
-    "github.com/faiface/beep/mp3"
-    "github.com/faiface/beep/speaker"
+	"fmt"
+	"image/color"
+
+	// "os"
+	"time"
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
+	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/layout"
+	"fyne.io/fyne/v2/storage"
+	"fyne.io/fyne/v2/theme"
+	"fyne.io/fyne/v2/widget"
+	"github.com/faiface/beep"
+	"github.com/faiface/beep/mp3"
+	"github.com/faiface/beep/speaker"
 )
+
 // var f *os.File
 var format beep.Format
 var streamer beep.StreamSeekCloser
 var pause bool = false
+var maxLen int = 80
 func showAudioPlayer() {
     go func(msg string) {
         fmt.Println(msg)
@@ -31,11 +36,10 @@ func showAudioPlayer() {
     time.Sleep(time.Second)
     // a := app.New()
     w := myapp.NewWindow("Audio Player")
-    w.Resize(fyne.NewSize(400, 400))
+    w.Resize(fyne.NewSize(500, 500))
 	r, _ := fyne.LoadResourceFromPath("static\\music2.png")
 	w.SetIcon(r)
-    logo := canvas.NewImageFromFile("static\\music1.png")
-    logo.FillMode = canvas.ImageFillOriginal
+    logo := canvas.NewImageFromFile("static\\music2.png")
     toolbar := widget.NewToolbar(
         widget.NewToolbarSpacer(),
         widget.NewToolbarAction(theme.MediaPlayIcon(), func() {
@@ -58,23 +62,46 @@ func showAudioPlayer() {
         }),
         widget.NewToolbarSpacer(),
     )
-    label := widget.NewLabel("Audio MP3 Player")
+    label := widget.NewLabel("Audio Player")
     label.Alignment = fyne.TextAlignCenter
-    label2 := widget.NewLabel("Play MP3")
+    label.TextStyle = fyne.TextStyle{Bold: true}
+    label2 := widget.NewLabel("Play")
     label2.Alignment = fyne.TextAlignCenter
     browse_files := widget.NewButton("Browse", func() {
         fd := dialog.NewFileOpen(func(uc fyne.URIReadCloser, _ error) {
             streamer, format, _ = mp3.Decode(uc)
-            label2.Text = uc.URI().Name()
+            if len(uc.URI().Name()) >= maxLen {
+                label2.Text = uc.URI().Name()[:maxLen] // slicing is a constant time operation in go
+            }else{
+                label2.Text = uc.URI().Name()
+            }
             label2.Refresh()
         }, w)
         fd.Show()
         fd.SetFilter(storage.NewExtensionFileFilter([]string{".mp3"}))
     })
     // slider := widget.NewSlider(0, 100)
-    c := container.NewVBox(label, browse_files, label2, toolbar)
+    img := canvas.NewImageFromFile("static\\itunes_bg.png")
+	img.FillMode = canvas.ImageFillStretch
+    new_rect:=canvas.NewRectangle(color.NRGBA{R:uint8(theme_color),G:uint8(theme_color),B:uint8(theme_color),A:150})
+    main_container:=container.New(layout.NewMaxLayout(),img,
+        container.New(layout.NewMaxLayout(),new_rect,
+        container.New(layout.NewVBoxLayout(),
+            label,
+            browse_files,
+            layout.NewSpacer(),
+            container.New(layout.NewHBoxLayout(),
+            layout.NewSpacer(),container.NewGridWrap(fyne.NewSize(150,150), container.NewPadded(logo)),layout.NewSpacer(),),
+            layout.NewSpacer(),
+            label2,
+            toolbar,
+            ),
+        ),
+    )
+    
+    // c := container.NewVBox(label, browse_files, label2, toolbar)
     w.SetContent(
-        container.NewBorder(logo, nil, nil, nil, c),
+        container.NewBorder(nil, nil, nil, nil, main_container),
     )
     w.CenterOnScreen()
     w.Show()
