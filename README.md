@@ -1,10 +1,16 @@
 # SsjOS
-## A Virtual OS made with GOLANG and Fyne Framework
+## A Virtual OS made with GO and Fyne Framework ![clipart16356881](https://user-images.githubusercontent.com/62555809/140176012-4ab282f4-01f6-4eb4-96c3-43ad67ddd797.png)
+
+
 
 SsjOS is a virtual operating system for a couple of apps that I made with GO using Fyne Framework. This project uses 2 different APIs for weather and news. This project was made in 2 days in a hackathon.  I got to learn a lot from it. I will be updating this project more in the future.
 
 ## Technologies Used
- - Language: ```GOLANG```
+ - Language: ![gologo1](https://user-images.githubusercontent.com/62555809/140175366-c6e57c8d-d331-44d4-b29a-d06b8fd8e580.png)
+
+
+
+
  - Framework: ```Fyne```
 
 ## How To Run 
