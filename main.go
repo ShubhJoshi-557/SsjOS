@@ -4,7 +4,6 @@ import (
 	// "fmt"
 	"image/color"
 	"time"
-
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
@@ -26,19 +25,14 @@ func updateTime(datetime *canvas.Text){
 }
 
 func main() {
-	// app := app.New()
 
-	// w := app.NewWindow("Hello")
 	myapp.Settings().SetTheme(theme.DarkTheme())
 
 	dt := time.Now()
-	// hello := widget.NewLabel(dt.Format("2006-01-02  15:04 Monday"))
 	datetime := canvas.NewText(dt.Format("Jan 02  15:04:05"),color.White)
 	datetime.TextSize = 12
 	datetime.Alignment = fyne.TextAlignCenter
 	datetime.TextStyle = fyne.TextStyle{Bold: true}
-	// updateTime(datetime)
-
 	
 	img := canvas.NewImageFromFile("static\\wallpaper5.jpg")
 	img.FillMode = canvas.ImageFillStretch
@@ -112,7 +106,6 @@ func main() {
 	icon0 :=canvas.NewImageFromFile("static\\drawer.png")
 	icon0.FillMode = canvas.ImageFillContain
 	app_drawer := widget.NewButton("",func ()  {
-		// fmt.Println(toggle)
 		drawer_toggle = !drawer_toggle
 		if drawer_toggle != true{
 			rect.Hide()
@@ -163,8 +156,8 @@ func main() {
 			apps1.Hide()
 		}
 	})
+	
 	rect3:= canvas.NewRectangle(color.RGBA{R:48,G:48,B:48,A:255})
-	// datetime_bar:= container.NewGridWrap(fyne.NewSize(1920,20), container.NewWithoutLayout(datetime, rect3))
 	datetime_bar:= container.New(
 		layout.NewMaxLayout(),
 		rect3,
