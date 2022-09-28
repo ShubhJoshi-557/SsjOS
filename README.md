@@ -20,7 +20,8 @@ SsjOS is a virtual operating system for a couple of apps that I made with GO usi
   - ```go run .``` to start the OS (i.e run all the apps concurrently)
   
 ## Screenshots
-![Untitled](https://user-images.githubusercontent.com/62555809/192702262-c20a135d-fb9f-4028-8fe2-38fff5f4b3d4.png)
+![Untitled](https://user-images.githubusercontent.com/62555809/192795988-ad6d8f5d-22a9-4d4f-9f56-944e8cc443fa.png)
+
 
 
 - OS (Light Mode)
